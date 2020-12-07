@@ -49,4 +49,11 @@ func main() {
 	drawing.Children = append(drawing.Children, group)
 
 	fmt.Println(drawing.String())
+
+	var d GraphicObject
+	fmt.Println(d)
+	d2 := GraphicObject{}
+	fmt.Println(d2)
+	d3 := new(GraphicObject)
+	fmt.Println(d3)
 }

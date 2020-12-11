@@ -35,8 +35,35 @@ type TextRange struct {
 }
 
 func (t *TextRange) Covers(position int) bool {
-
+	return t.Start >= position && position <= t.End
 }
+
+type BetterFormattedText struct {
+	plainText  string
+	formatting []*TextRange
+}
+
+func (b *BetterFormattedText) String() string {
+	sb := strings.Builder{}
+	for i := 0; i < len(b.plainText); i++ {
+		c := b.plainText[i]
+		for _, r := range b.formatting {
+			if r.Covers(i) && r.Capitalize {
+				c = uint8(unicode.ToUpper(rune(c)))
+			}
+		}
+		sb.WriteRune(rune(c))
+	}
+	return sb.String()
+}
+
+func NewBetterFormattedText(plainText string) *BetterFormattedText {
+	return &BetterFormattedText{
+		plainText: plainText,
+	}
+}
+
+// todo
 
 func main() {
 

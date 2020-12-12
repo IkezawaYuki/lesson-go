@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 	"unicode"
 )
@@ -21,6 +22,13 @@ func (f *FormattedText) String() string {
 		}
 	}
 	return sb.String()
+}
+
+func NewFormattedText(plainText string) *FormattedText {
+	return &FormattedText{
+		plainText:  plainText,
+		capitalize: make([]bool, len(plainText)),
+	}
 }
 
 func (f *FormattedText) Capitalize(start, end int) {
@@ -63,8 +71,25 @@ func NewBetterFormattedText(plainText string) *BetterFormattedText {
 	}
 }
 
-// todo
+func (b *BetterFormattedText) Range(start, end int) *TextRange {
+	r := &TextRange{
+		Start:      start,
+		End:        end,
+		Capitalize: false,
+		Bold:       false,
+		Italic:     false,
+	}
+	b.formatting = append(b.formatting, r)
+	return r
+}
 
 func main() {
+	text := "This is a brave new world"
+	ft := NewFormattedText(text)
+	ft.Capitalize(10, 15)
+	fmt.Println(ft.String())
 
+	bft := NewBetterFormattedText(text)
+	bft.Range(16, 19).Capitalize = true
+	fmt.Println(bft.String())
 }

@@ -83,8 +83,28 @@ func (d *DoubleAttackModifier) Handle() {
 	d.CreatureModifier.Handle()
 }
 
-// todo
+type NoBonusesModifier struct {
+	CreatureModifier
+}
+
+func NewNoBonusesModifier(c *Creature) *NoBonusesModifier {
+	return &NoBonusesModifier{CreatureModifier{creature: c}}
+}
+
+func (n *NoBonusesModifier) Handle() {
+	// nothing here!
+}
 
 func main() {
-	fmt.Println()
+	goblin := NewCreature("Goblin", 1, 1)
+	fmt.Println(goblin.String())
+
+	root := NewCreatureModifier(goblin)
+
+	root.Add(NewDoubleAttackModifier(goblin))
+	root.Add(NewIncreaseDefensedModifier(goblin))
+	root.Add(NewDoubleAttackModifier(goblin))
+
+	root.Handle()
+	fmt.Println(goblin.String())
 }

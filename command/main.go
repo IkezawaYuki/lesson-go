@@ -4,6 +4,22 @@ import (
 	"fmt"
 )
 
+type BankAccount_ struct {
+	Balance int
+}
+
+func Deposit_(ba *BankAccount_, amount int) {
+	fmt.Println("Depositing", amount)
+	ba.Balance += amount
+}
+
+func Withdraw_(ba *BankAccount_, amount int) {
+	if ba.Balance >= amount {
+		fmt.Println("Withdrawing", amount)
+		ba.Balance -= amount
+	}
+}
+
 var overdraftLimit = -500
 
 type BankAccount struct {

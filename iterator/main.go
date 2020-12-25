@@ -62,14 +62,56 @@ func (i *InOrderIterator) MoveNext() bool {
 		return true
 	}
 
-	// todo
+	if i.Current.right != nil {
+		i.Current = i.Current.right
+		for i.Current.left != nil {
+			i.Current = i.Current.left
+		}
+		return true
+	} else {
+		p := i.Current.parent
+		for p != nil && i.Current == p.right {
+			i.Current = p
+			p = p.parent
+		}
+		i.Current = p
+		return i.Current != nil
+	}
+}
+
+type BinaryTree struct {
+	root *Node
+}
+
+func NewBinaryTree(root *Node) *BinaryTree {
+	return &BinaryTree{root: root}
+}
+
+func (b *BinaryTree) InOrder() *InOrderIterator {
+	return NewInOrderIterator(b.root)
 }
 
 func main() {
-	p := Person{
-		"A", "B", "C",
+	//p := Person{
+	//	"A", "B", "C",
+	//}
+	//for _, n := range p.Names() {
+	//	fmt.Println(n)
+	//}
+
+	root := NewNode(1,
+		NewTerminalNode(2),
+		NewTerminalNode(3))
+	it := NewInOrderIterator(root)
+
+	for it.MoveNext() {
+		fmt.Printf("%d,", it.Current.Value)
 	}
-	for _, n := range p.Names() {
-		fmt.Println(n)
+	fmt.Println("\b")
+
+	t := NewBinaryTree(root)
+	for i := t.InOrder(); i.MoveNext(); {
+		fmt.Printf("%d,", i.Current.Value)
 	}
+	fmt.Println("\b")
 }

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="74dfe613-517a-4874-add5-2f6ad6e32ad4" name="Default Changelist" comment="mod">
-      <change afterPath="$PROJECT_DIR$/real_world_http/client/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/real_world_http/client/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/real_world_http/server/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/real_world_http/server/main.go" afterDir="false" />
+    <list default="true" id="74dfe613-517a-4874-add5-2f6ad6e32ad4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/real_world_http/client/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/real_world_http/client/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +49,7 @@
       <recent name="$PROJECT_DIR$/real_world_http/server" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.realworld go build main.go">
+  <component name="RunManager" selected="Go Build.realworld client go build main.go">
     <configuration name="go build main.go (2)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="lesson-go" />
       <working_directory value="$PROJECT_DIR$" />
@@ -61,11 +58,21 @@
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
-    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+    <configuration name="realworld client go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="lesson-go" />
-      <working_directory value="$PROJECT_DIR$" />
+      <working_directory value="$PROJECT_DIR$/real_world_http/client" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+        </ENTRIES>
+      </EXTENSION>
       <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/iterator/main.go" />
+      <filePath value="$PROJECT_DIR$/real_world_http/client/main.go" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
@@ -109,16 +116,17 @@
     <list>
       <item itemvalue="Go Build.go build main.go (2)" />
       <item itemvalue="Go Build.realworld go build main.go" />
+      <item itemvalue="Go Build.realworld client go build main.go" />
       <item itemvalue="Go Test.BenchmarkRSAEncryption in encrypt_test.go" />
       <item itemvalue="Go Test.gobench encrypt_test.go" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.realworld client go build main.go" />
         <item itemvalue="Go Build.realworld go build main.go" />
         <item itemvalue="Go Build.go build main.go" />
         <item itemvalue="Go Build.go build main.go (2)" />
         <item itemvalue="Go Test.gobench encrypt_test.go" />
-        <item itemvalue="Go Test.BenchmarkRSAEncryption in encrypt_test.go" />
       </list>
     </recent_temporary>
   </component>

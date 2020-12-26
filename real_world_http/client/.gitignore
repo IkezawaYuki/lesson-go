@@ -2,3 +2,6 @@ ca.crt
 ca.csr
 ca.key
 ca.srl
+client.crt
+client.csr
+client.key

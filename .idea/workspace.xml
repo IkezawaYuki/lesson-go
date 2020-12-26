@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="74dfe613-517a-4874-add5-2f6ad6e32ad4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/real_world_http/client/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/real_world_http/client/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/real_world_http/client/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/real_world_http/client/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/real_world_http/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/real_world_http/server/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,12 +43,14 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/real_world_http/client" />
       <recent name="$PROJECT_DIR$/real_world_http/server" />
+      <recent name="$PROJECT_DIR$/real_world_http/client" />
+      <recent name="$PROJECT_DIR$/real_world_http" />
     </key>
   </component>
   <component name="RunManager" selected="Go Build.realworld client go build main.go">

@@ -1,35 +1,58 @@
 package main
 
 import (
-	"crypto/tls"
+	"bufio"
+	"io"
 	"log"
+	"net"
 	"net/http"
-	"net/http/httputil"
+	"strconv"
+	"time"
 )
 
 func main() {
+	dialer := &net.Dialer{
+		Timeout:   30 * time.Second,
+		KeepAlive: 30 * time.Second,
+	}
+	conn, err := dialer.Dial("tcp", "localhost:18888")
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
 
-	cert, err := tls.LoadX509KeyPair("client.crt", "client.key")
+	request, err := http.NewRequest("GET", "http://localhost:18888/chunked", nil)
+	err = request.Write(conn)
 	if err != nil {
 		panic(err)
 	}
 
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				Certificates: []tls.Certificate{cert},
-			},
-		},
+	reader := bufio.NewReader(conn)
+	resp, err := http.ReadResponse(reader, request)
+	if err != nil {
+		panic(err)
+	}
+	if resp.TransferEncoding[0] != "chunked" {
+		panic(err)
 	}
 
-	resp, err := client.Get("https://localhost:18443")
-	if err != nil {
-		panic(err)
+	for {
+		sizeStr, err := reader.ReadBytes('\n')
+		if err == io.EOF {
+			break
+		}
+
+		size, err := strconv.ParseInt(string(sizeStr[:len(sizeStr)-2]), 16, 64)
+		if size == 0 {
+			break
+		}
+		if err != nil {
+			panic(err)
+		}
+
+		line := make([]byte, int(size))
+		reader.Read(line)
+		reader.Discard(2)
+		log.Println(" ", string(line))
 	}
-	defer resp.Body.Close()
-	dump, err := httputil.DumpResponse(resp, true)
-	if err != nil {
-		panic(err)
-	}
-	log.Println(string(dump))
 }

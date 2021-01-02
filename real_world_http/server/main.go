@@ -1,10 +1,9 @@
 package main
 
 import (
-	"crypto/tls"
 	"fmt"
 	"io"
-	"log"
+	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 	"time"
@@ -68,19 +67,34 @@ func handlerChunkedResponse(w http.ResponseWriter, r *http.Request) {
 	flusher.Flush()
 }
 
-func main() {
-	server := &http.Server{
-		TLSConfig: &tls.Config{
-			ClientAuth: tls.RequireAndVerifyClientCert,
-			MinVersion: tls.VersionTLS12,
-		},
-		Addr: ":18888",
+var image []byte
+
+func init() {
+	var err error
+	image, err = ioutil.ReadFile("./image.png")
+	if err != nil {
+		panic(err)
 	}
-	http.HandleFunc("/", handler)
-	http.HandleFunc("/upgrade", handlerUpgrade)
-	http.HandleFunc("/chunked", handlerChunkedResponse)
-	log.Println("start http listening :18888")
-	//err := server.ListenAndServeTLS("server.crt", "server.key")
-	err := server.ListenAndServe()
-	log.Println(err)
+}
+
+func handlerHtml(w http.ResponseWriter, r *http.Request) {
+	pusher, ok := w.(http.Pusher)
+	if ok {
+		pusher.Push("/image", nil)
+	}
+	w.Header().Add("Content-Type", "text/html")
+	fmt.Fprintf(w, `<html><body><img src="/image"></body></html>`)
+}
+
+func handlerImage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "image/png")
+	w.Write(image)
+}
+
+func main() {
+	http.HandleFunc("/", handlerHtml)
+	http.HandleFunc("/image", handlerImage)
+	fmt.Println("start http listening :18443")
+	err := http.ListenAndServeTLS(":18443", "server.crt", "server.key", nil)
+	fmt.Println(err)
 }

@@ -2,14 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74dfe613-517a-4874-add5-2f6ad6e32ad4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/real_world_http/client2/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/real_world_http/http2/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/real_world_http/server2/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/real_world_http/server2/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/lesson-go.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/lesson-go.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/classic_visitor/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/functional_template/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reflect_visitor/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/template/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/visitor/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/real_world_http/server/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/real_world_http/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/real_world_http/server/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,20 +58,12 @@
       <recent name="$PROJECT_DIR$/real_world_http" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build main.go (3)">
+  <component name="RunManager" selected="Go Build.go build main.go (4)">
     <configuration name="go build main.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="lesson-go" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/real_world_http/http2/main.go" />
-      <directory value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="go build main.go (2)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="lesson-go" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/real_world_http/server2/main.go" />
+      <filePath value="$PROJECT_DIR$/visitor/main.go" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
@@ -89,7 +79,15 @@
       <module name="lesson-go" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/real_world_http/server/main.go" />
+      <filePath value="$PROJECT_DIR$/reflect_visitor/main.go" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build main.go (5)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="lesson-go" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/template/main.go" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
@@ -97,24 +95,24 @@
       <module name="lesson-go" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/strategy/main.go" />
+      <filePath value="$PROJECT_DIR$/functional_template/main.go" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Go Build.go build main.go (4)" />
+      <item itemvalue="Go Build.go build main.go (3)" />
+      <item itemvalue="Go Build.go build main.go (5)" />
       <item itemvalue="Go Build.go build main.go" />
       <item itemvalue="Go Build.go build main.go (1)" />
-      <item itemvalue="Go Build.go build main.go (2)" />
-      <item itemvalue="Go Build.go build main.go (3)" />
+      <item itemvalue="Go Build.go build main.go (4)" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build main.go (3)" />
-        <item itemvalue="Go Build.go build main.go (2)" />
         <item itemvalue="Go Build.go build main.go (4)" />
         <item itemvalue="Go Build.go build main.go (1)" />
         <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="Go Build.go build main.go (5)" />
+        <item itemvalue="Go Build.go build main.go (3)" />
       </list>
     </recent_temporary>
   </component>

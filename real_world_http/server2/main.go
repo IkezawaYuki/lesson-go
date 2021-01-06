@@ -54,7 +54,7 @@ func handlerPrimeSSE(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var err error
-	html, err = ioutil.ReadFile("real_world_http/server2/index.html")
+	html, err = ioutil.ReadFile("real_world_http/server2/home.html")
 	if err != nil {
 		panic(err)
 	}

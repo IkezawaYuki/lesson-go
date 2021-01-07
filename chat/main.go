@@ -16,7 +16,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 	}
-	http.ServeFile(w, r, "html")
+	http.ServeFile(w, r, "home.html")
 }
 
 func main() {

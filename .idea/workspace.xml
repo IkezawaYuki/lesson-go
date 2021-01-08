@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="74dfe613-517a-4874-add5-2f6ad6e32ad4" name="Default Changelist" comment="">
+    <list default="true" id="74dfe613-517a-4874-add5-2f6ad6e32ad4" name="Default Changelist" comment="mod">
+      <change afterPath="$PROJECT_DIR$/_lesson12/one/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_lesson12/three/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chat/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/chat/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chat/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/chat/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/chat/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -14,8 +16,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Go File" />
         <option value="HTML File" />
+        <option value="Go File" />
       </list>
     </option>
   </component>
@@ -151,7 +153,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/chat/main.go</url>
-          <line>22</line>
+          <line>24</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>

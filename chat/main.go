@@ -12,9 +12,11 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
 	if r.URL.Path != "/" {
 		http.Error(w, "not found", http.StatusNotFound)
+		return
 	}
 	if r.Method != "GET" {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
 	}
 	http.ServeFile(w, r, "home.html")
 }

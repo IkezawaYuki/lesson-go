@@ -186,7 +186,17 @@ func pretty(p *printer, v reflect.Value) error {
 	case reflect.Float32, reflect.Float64:
 		p.stringf("%f", v.Float())
 	case reflect.Complex64, reflect.Complex128:
-		// todo
+		c := v.Complex()
+		p.stringf("#C(%f %f)", real(c), imag(c))
+	case reflect.Interface:
+		p.begin()
+		t := v.Type()
+		if t.Name() == "" {
+			p.stringf("%q ", v.Elem().Type().String())
+		} else {
+			p.stringf("%s.%s", t.PkgPath(), t.Name())
+		}
+		p.end()
 	}
 	return nil
 }

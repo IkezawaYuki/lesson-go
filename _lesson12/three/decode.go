@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 	"text/scanner"
 )
 
@@ -17,6 +18,19 @@ func Unmarshal(data []byte, out interface{}) (err error) {
 			err = fmt.Errorf("error at %s: %v", lex.scan.Position, x)
 		}
 	}()
+
+	tags := make(map[string]string)
+	v := reflect.ValueOf(out).Elem()
+	for i := 0; i < v.NumField(); i++ {
+		fieldInfo := v.Type().Field(i)
+		tag := fieldInfo.Tag
+		name := tag.Get("sexpr")
+		if name == "" {
+			name = fieldInfo.Name
+		}
+		tags[name] = fieldInfo.Name
+	}
+
 	read(lex, reflect.ValueOf(out).Elem())
 	return
 }
@@ -61,7 +75,11 @@ func read(lex *lexer, v reflect.Value) {
 		return
 	case scanner.Int:
 		i, _ := strconv.Atoi(lex.text())
-		v.SetInt(int64(i))
+		if isSignedInt(v) {
+			v.SetInt(int64(i))
+		} else {
+			v.SetUint(uint64(i))
+		}
 		lex.next()
 		return
 	case scanner.Float:
@@ -163,15 +181,59 @@ func endList(lex *lexer) bool {
 	return false
 }
 
+var maps = map[string]reflect.Type{
+	"int":        reflect.TypeOf(int(0)),
+	"int8":       reflect.TypeOf(int8(0)),
+	"int16":      reflect.TypeOf(int16(0)),
+	"int32":      reflect.TypeOf(int32(0)),
+	"int64":      reflect.TypeOf(int64(0)),
+	"uint":       reflect.TypeOf(uint(0)),
+	"uint8":      reflect.TypeOf(uint8(0)),
+	"uint16":     reflect.TypeOf(uint16(0)),
+	"uint32":     reflect.TypeOf(uint32(0)),
+	"uint64":     reflect.TypeOf(uint64(0)),
+	"bool":       reflect.TypeOf(false),
+	"string":     reflect.TypeOf(""),
+	"complex64":  reflect.TypeOf(complex64(0 + 0i)),
+	"complex128": reflect.TypeOf(complex128(0 + 0i)),
+}
+
 func typeOf(tName string) reflect.Type {
-	switch tName {
-	case "int":
-		var x int
-		return reflect.TypeOf(x)
-	case "[]int":
-		var x []int
-		return reflect.TypeOf(x)
+	t, ok := maps[tName]
+	if ok {
+		return t
+	}
+	if strings.HasPrefix(tName, "[]") {
+		return reflect.SliceOf(typeOf(tName[2:]))
+	}
+
+	if tName[0] == '[' {
+		i := strings.Index(tName, "]")
+		if i > 0 {
+			len, _ := strconv.Atoi(tName[1:i])
+			return reflect.ArrayOf(len, typeOf(tName[i+1:]))
+		}
+	}
+
+	if strings.HasPrefix(tName, "map") {
+		i := strings.Index(tName, "]")
+		if i > 0 {
+			return reflect.MapOf(typeOf(tName[4:i]), typeOf(tName[i+1:]))
+		}
+	}
+
+	panic(fmt.Sprintf("%s not supported yet\n", tName))
+}
+
+func isSignedInt(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16,
+		reflect.Int32, reflect.Int64:
+		return true
+	case reflect.Uint, reflect.Uint8, reflect.Uint16,
+		reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		return false
 	default:
-		panic(fmt.Sprintf("%s not supported yet\n", tName))
+		panic(fmt.Sprintf("v.Kind(%d)", v.Kind()))
 	}
 }

@@ -13,4 +13,7 @@ func main() {
 
 	fmt.Printf("%q\n", hello)
 	fmt.Printf("%s\n", hello)
+
+	b, _ := Marshal(hello)
+	fmt.Println(string(b))
 }

@@ -6,6 +6,14 @@ import (
 	"reflect"
 )
 
+func Marshal(v interface{}) ([]byte, error) {
+	var buf bytes.Buffer
+	if err := encode(&buf, reflect.ValueOf(v)); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
 func encode(buf *bytes.Buffer, v reflect.Value) error {
 	switch v.Kind() {
 	case reflect.Invalid:

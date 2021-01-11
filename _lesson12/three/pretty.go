@@ -96,6 +96,12 @@ func (p *printer) space() {
 	p.rtotal++
 }
 
+func (p *printer) newline() {
+	t := &token{kind: '\n', size: -p.rtotal}
+	p.tokens = append(p.tokens, t)
+	p.rtotal++
+}
+
 func (p *printer) print(t *token) {
 	switch t.kind {
 	case 's':
@@ -113,6 +119,9 @@ func (p *printer) print(t *token) {
 			p.WriteByte(' ')
 			p.width--
 		}
+	case '\n':
+		p.width = p.indents[len(p.indents)-1] - 1
+		fmt.Fprintf(&p.Buffer, "\n%*s", margin-p.width, "")
 	}
 }
 
@@ -197,6 +206,8 @@ func pretty(p *printer, v reflect.Value) error {
 			p.stringf("%s.%s", t.PkgPath(), t.Name())
 		}
 		p.end()
+	default:
+		return fmt.Errorf("unsupported type: %s", v.Type())
 	}
 	return nil
 }

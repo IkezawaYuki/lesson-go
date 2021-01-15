@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 type packageInfo struct {
@@ -21,6 +22,16 @@ func main() {
 		showUsage()
 	}
 	initialPackages, err := executeGoList(os.Args[1:]...)
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	allPackages, err := executeGoList("...")
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	showDependentPackages(initialPackages, allPackages)
 }
 
 func showUsage() {
@@ -71,4 +82,38 @@ func executeGoList(packages ...string) ([]*packageInfo, error) {
 		}
 		pInfos = append(pInfos, &pInfo)
 	}
+}
+
+func showDependentPackages(initial, all []*packageInfo) {
+	initialNames := make([]string, 0, len(initial))
+	for _, pInfo := range initial {
+		initialNames = append(initialNames, pInfo.ImportPath)
+	}
+	fmt.Printf("Specified Packages: %s\n", strings.Join(initialNames, " "))
+
+	var deps []string
+
+	for _, pInfo := range all {
+		if !isDependent(pInfo, initialNames) {
+			return
+		}
+		deps = append(deps, pInfo.ImportPath)
+	}
+
+	if len(deps) != 0 {
+		fmt.Printf("Dependent Packages: %s\n", strings.Join(deps, " "))
+	}
+}
+
+func isDependent(pInfo *packageInfo, names []string) bool {
+topLoop:
+	for _, name := range names {
+		for _, deps := range pInfo.Deps {
+			if deps == name {
+				continue topLoop
+			}
+		}
+		return false
+	}
+	return true
 }

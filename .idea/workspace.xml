@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74dfe613-517a-4874-add5-2f6ad6e32ad4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/_lesson08/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_lesson08/netcat.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/_lesson08/chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/_lesson08/chat.go" afterDir="false" />
     </list>
@@ -55,12 +57,20 @@
       <recent name="$PROJECT_DIR$/real_world_http" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestConcurrentBankAccess in bank_test.go">
-    <configuration name="go build pipeline.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Build.go build netcat.go">
+    <configuration name="go build chat.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="lesson-go" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/_lesson09/pipeline.go" />
+      <filePath value="$PROJECT_DIR$/_lesson08/chat.go" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build netcat.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="lesson-go" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/_lesson08/netcat.go" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
@@ -94,29 +104,20 @@
       <pattern value="^\QTestWithdrawNormal\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="intset_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="lesson-go" />
-      <working_directory value="$PROJECT_DIR$/_lesson11/seven" />
-      <framework value="gotest" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/_lesson11/seven/intset_test.go" />
-      <method v="2" />
-    </configuration>
     <list>
-      <item itemvalue="Go Test.intset_test.go" />
-      <item itemvalue="Go Build.go build pipeline.go" />
       <item itemvalue="Go Test.TestWithdrawNormal in bank_test.go" />
       <item itemvalue="Go Test.TestBank in bank_test.go" />
       <item itemvalue="Go Test.TestConcurrentBankAccess in bank_test.go" />
+      <item itemvalue="Go Build.go build chat.go" />
+      <item itemvalue="Go Build.go build netcat.go" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build netcat.go" />
+        <item itemvalue="Go Build.go build chat.go" />
         <item itemvalue="Go Test.TestConcurrentBankAccess in bank_test.go" />
         <item itemvalue="Go Test.TestBank in bank_test.go" />
         <item itemvalue="Go Test.TestWithdrawNormal in bank_test.go" />
-        <item itemvalue="Go Build.go build pipeline.go" />
-        <item itemvalue="Go Test.intset_test.go" />
       </list>
     </recent_temporary>
   </component>

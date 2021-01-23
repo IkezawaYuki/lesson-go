@@ -51,6 +51,21 @@ func Extract(url string) error {
 	return extractByType(resp, url, host+"/root.html", host, hostURL)
 }
 
+func extractAsFile(url, path, host, hostURL string) error {
+	fmt.Printf("Contents of %s should be stored as %s\n", url, path)
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		resp.Body.Close()
+		return fmt.Errorf("getting %s: %s", url, resp.Status)
+	}
+
+	return extractByType(resp, url, host+"/root.html", host, hostURL)
+}
+
 func extractByType(resp *http.Response, url, path, host, hostURL string) error {
 	contentType := extractContentType(resp.Header)
 	if contentType[0] != TextHTML {
@@ -71,6 +86,62 @@ func extractByType(resp *http.Response, url, path, host, hostURL string) error {
 		return fmt.Errorf("parsing %s as HTML: %v", url, err)
 	}
 
+	visitNode := func(n *html.Node) {
+		if n.Type == html.ElementNode && n.Data == "a" {
+			for i, a := range n.Attr {
+				if a.Key != "href" {
+					continue
+				}
+				link, err := resp.Request.URL.Parse(a.Val)
+				if err != nil {
+					continue
+				}
+				if strings.HasPrefix(link.String(), hostURL) {
+					n.Attr[i].Val = "file:" + a.Val
+					if a.Val != "/" && a.Val != "#" && link.String() != hostURL {
+						if a.Val[0] == '/' {
+							extractAsFile(link.String(), host+a.Val, host, hostURL)
+						} else {
+							extractAsFile(link.String(), host+"/"+a.Val, host, hostURL)
+						}
+					}
+				}
+			}
+		} else if n.Type == html.ElementNode && n.Data == "img" {
+			for _, a := range n.Attr {
+				if a.Key != "src" {
+					continue
+				}
+				link, err := resp.Request.URL.Parse(a.Val)
+				if err != nil {
+					continue
+				}
+				extractAsFile(link.String(), host+"/"+a.Val, host, hostURL)
+			}
+		}
+	}
+	forEachNode(doc, visitNode, nil)
+
+	f, err := os.Create(path)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		return err
+	}
+	defer f.Close()
+	html.Render(f, doc)
+	return nil
+}
+
+func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
+	if pre != nil {
+		pre(n)
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		forEachNode(c, pre, post)
+	}
+	if post != nil {
+		post(n)
+	}
 }
 
 func extractContentType(header http.Header) []string {

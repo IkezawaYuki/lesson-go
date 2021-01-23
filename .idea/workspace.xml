@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74dfe613-517a-4874-add5-2f6ad6e32ad4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/_lesson08/mirror.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_lesson08/reverb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_lesson08/mirror.go" beforeDir="false" afterPath="$PROJECT_DIR$/_lesson08/mirror.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +55,7 @@
       <recent name="$PROJECT_DIR$/real_world_http" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build eight.go">
+  <component name="RunManager" selected="Go Build.go build mirror.go">
     <configuration name="go build chat.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="lesson-go" />
       <working_directory value="$PROJECT_DIR$" />
@@ -73,22 +72,20 @@
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
+    <configuration name="go build mirror.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="lesson-go" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/_lesson08/mirror.go" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build netcat.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="lesson-go" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="FILE" />
       <filePath value="$PROJECT_DIR$/_lesson08/netcat.go" />
       <directory value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestBank in bank_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="lesson-go" />
-      <working_directory value="$PROJECT_DIR$/_lesson09/bank" />
-      <framework value="gotest" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/_lesson09/bank/bank_test.go" />
-      <pattern value="^\QTestBank\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestConcurrentBankAccess in bank_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -102,19 +99,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Go Test.TestBank in bank_test.go" />
       <item itemvalue="Go Test.TestConcurrentBankAccess in bank_test.go" />
       <item itemvalue="Go Build.go build chat.go" />
       <item itemvalue="Go Build.go build netcat.go" />
       <item itemvalue="Go Build.go build eight.go" />
+      <item itemvalue="Go Build.go build mirror.go" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build mirror.go" />
         <item itemvalue="Go Build.go build eight.go" />
         <item itemvalue="Go Build.go build netcat.go" />
         <item itemvalue="Go Build.go build chat.go" />
         <item itemvalue="Go Test.TestConcurrentBankAccess in bank_test.go" />
-        <item itemvalue="Go Test.TestBank in bank_test.go" />
       </list>
     </recent_temporary>
   </component>

@@ -70,6 +70,10 @@ type ReaderFrom interface {
 	ReadFrom(r Reader) (n int64, err error)
 }
 
+type WriterTo interface {
+	WriteTo(w Writer) (n int64, err error)
+}
+
 type ReaderAt interface {
 	ReadAt(p []byte, off int64) (n int, err error)
 }
@@ -147,9 +151,106 @@ func Copy(dst Writer, src Reader) (written int64, err error) {
 	return copyBuffer(dst, src, nil)
 }
 
+func CopyBuffer(dst Writer, src Reader, buf []byte) (written int64, err error) {
+	if buf != nil && len(buf) == 0 {
+		panic("empty buffer in io.CopyBuffer")
+	}
+	return copyBuffer(dst, src, buf)
+}
+
 func copyBuffer(dst Writer, src Reader, buf []byte) (written int64, err error) {
 	if wt, ok := src.(WriterTo); ok {
 		return wt.WriteTo(dst)
 	}
 
+	if rt, ok := dst.(ReaderFrom); ok {
+		return rt.ReadFrom(src)
+	}
+
+	if buf == nil {
+		size := 32 * 1024
+		if l, ok := src.(*LimitedReader); ok && int64(size) > l.N {
+			if l.N < 1 {
+				size = 1
+			} else {
+				size = int(l.N)
+			}
+		}
+		buf = make([]byte, size)
+	}
+
+	for {
+		nr, er := src.Read(buf)
+		if nr > 0 {
+			nw, ew := dst.Write(buf[0:nr])
+			if nw > 0 {
+				written += int64(nw)
+			}
+			if ew != nil {
+				err = ew
+				break
+			}
+			if nr != nw {
+				err = ErrShortWrite
+				break
+			}
+		}
+		if er != nil {
+			if er != EOF {
+				err = er
+			}
+		}
+		if er != nil {
+			if er != EOF {
+				err = er
+			}
+			break
+		}
+	}
+	return written, err
 }
+
+func LimitReader(r Reader, n int64) Reader { return &LimitedReader{r, n} }
+
+type LimitedReader struct {
+	R Reader
+	N int64
+}
+
+func (l *LimitedReader) Read(p []byte) (n int, err error) {
+	if l.N <= 0 {
+		return 0, EOF
+	}
+	if int64(len(p)) > l.N {
+		p = p[0:l.N]
+	}
+	n, err = l.R.Read(p)
+	l.N -= int64(n)
+	return
+}
+
+func NewSectionReader(r ReaderAt, off int64, n int64) *SectionReader {
+	return &SectionReader{r, off, off, off + n}
+}
+
+type SectionReader struct {
+	r     ReaderAt
+	base  int64
+	off   int64
+	limit int64
+}
+
+func (s *SectionReader) Read(p []byte) (n int, err error) {
+	if s.off >= s.limit {
+		return 0, EOF
+	}
+	if max := s.limit - s.off; int64(len(p)) > max {
+		p = p[0:max]
+	}
+	n, err = s.r.ReadAt(p, s.off)
+	s.off += int64(n)
+	return
+}
+
+var errWhence = errors.New("Seek: invalid whence")
+var errOffset = errors.New("Seek: invalid offset")

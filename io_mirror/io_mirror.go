@@ -254,3 +254,56 @@ func (s *SectionReader) Read(p []byte) (n int, err error) {
 
 var errWhence = errors.New("Seek: invalid whence")
 var errOffset = errors.New("Seek: invalid offset")
+
+func (s *SectionReader) Seek(offset int64, whence int) (int64, error) {
+	switch whence {
+	default:
+		return 0, errWhence
+	case SeekStart:
+		offset += s.base
+	case SeekCurrent:
+		offset += s.off
+	case SeekEnd:
+		offset += s.limit
+	}
+	if offset < s.base {
+		return 0, errOffset
+	}
+	s.off = offset
+	return offset - s.base, nil
+}
+
+func (s *SectionReader) ReadAt(p []byte, off int64) (n int, err error) {
+	if off < 0 || off >= s.limit-s.base {
+		return 0, EOF
+	}
+	off += s.base
+	if max := s.limit - off; int64(len(p)) > max {
+		p = p[0:max]
+		n, err = s.r.ReadAt(p, off)
+		if err == nil {
+			err = EOF
+		}
+		return n, err
+	}
+	return s.r.ReadAt(p, off)
+}
+
+func TeeReader(r Reader, w Writer) Reader {
+	return &teeReader{r, w}
+}
+
+type teeReader struct {
+	r Reader
+	w Writer
+}
+
+func (t *teeReader) Read(p []byte) (n int, err error) {
+	n, err = t.r.Read(p)
+	if n > 0 {
+		if n, err := t.w.Write(p[:n]); err != nil {
+			return n, err
+		}
+	}
+	return
+}

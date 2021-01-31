@@ -1,4 +1,4 @@
-package io_mirror
+package ioutil_mirror
 
 import (
 	"os"

@@ -22,7 +22,12 @@ func Is(err, target error) bool {
 		if isComparable && err == target {
 			return true
 		}
-
+		if x, ok := err.(interface{ Is(error) bool }); ok && x.Is(target) {
+			return true
+		}
+		if err = Unwrap(err); err == nil {
+			return false
+		}
 	}
 	return false
 }

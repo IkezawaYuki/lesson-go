@@ -227,11 +227,16 @@ func WithDeadline(parent Context, d time.Time) (Context, CancelFunc) {
 	dur := time.Until(d)
 	if dur <= 0 {
 		c.cancel(true, DeadlineExceeded)
-		return c, func() {
-			c.cancel(false, Canceled)
-		}
+		return c, func() { c.cancel(false, Canceled) }
 	}
-
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.err == nil {
+		c.timer = time.AfterFunc(dur, func() {
+			c.cancel(true, DeadlineExceeded)
+		})
+	}
+	return c, func() { c.cancel(true, Canceled) }
 }
 
 type timerCtx struct {
@@ -261,4 +266,36 @@ func (c *timerCtx) cancel(removeFromParent bool, err error) {
 		c.timer = nil
 	}
 	c.mu.Unlock()
+}
+
+func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) {
+	return WithDeadline(parent, time.Now().Add(timeout))
+}
+
+type valueCtx struct {
+	Context
+	key, val interface{}
+}
+
+func stringify(v interface{}) string {
+	switch s := v.(type) {
+	case stringer:
+		return s.String()
+	case string:
+		return s
+	}
+	return "<not Stringer>"
+}
+
+func (c *valueCtx) String() string {
+	return contextName(c.Context) + ".WithValue(type " +
+		reflect.TypeOf(c.key).String() +
+		", val " + stringify(c.val) + ")"
+}
+
+func (c *valueCtx) Value(key interface{}) interface{} {
+	if c.key == key {
+		return c.val
+	}
+	return c.Context.Value(key)
 }

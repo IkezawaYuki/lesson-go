@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -293,8 +295,37 @@ func (f *FlagSet) PrintDefaults() {
 			s += " " + name
 		}
 
-		// todo
+		if len(name) > 0 {
+			s += " " + name
+		}
+
+		if len(s) <= 4 {
+			s += "\t"
+		} else {
+			s += "\n    \t"
+		}
+		s += strings.ReplaceAll(usage, "\n", "\n    \t")
+
+		if !isZeroValue(flag, flag.DefValue) {
+			if _, ok := flag.Value.(*stringValue); ok {
+				s += fmt.Sprintf(" (defalut %q)", flag.DefValue)
+			} else {
+				s += fmt.Sprintf(" (default %v)", flag.DefValue)
+			}
+		}
+		fmt.Fprintf(f.Output(), s, "\n")
 	})
+}
+
+func isZeroValue(flag *Flag, value string) bool {
+	typ := reflect.TypeOf(flag.Value)
+	var z reflect.Value
+	if typ.Kind() == reflect.Ptr {
+		z = reflect.New(typ.Elem())
+	} else {
+		z = reflect.Zero(typ)
+	}
+	return value == z.Interface().(Value).String()
 }
 
 func UnquoteUsage(flag *Flag) (name string, usage string) {
@@ -329,6 +360,10 @@ func UnquoteUsage(flag *Flag) (name string, usage string) {
 	return
 }
 
+func PrintDefaults() {
+	CommandLine.PrintDefaults()
+}
+
 func (f *FlagSet) defaultUsage() {
 	if f.name == "" {
 		fmt.Fprintf(f.Output(), "Usage:\n")
@@ -354,6 +389,47 @@ var Usage = func() {
 
 func commandLineUsage() {
 	Usage()
+}
+
+func (f *FlagSet) NFlag() int {
+	return len(f.actual)
+}
+
+func NFlag() int {
+	return len(CommandLine.actual)
+}
+
+func (f *FlagSet) Arg(i int) string {
+	return CommandLine.Arg(i)
+}
+
+func Args() []string {
+	return CommandLine.args
+}
+
+func (f *FlagSet) BoolVar(p *bool, name string, value bool, usage string) {
+	f.Var(newBoolValue(value, p), name, usage)
+}
+
+func (f *FlagSet) Bool(name string, value bool, usage string) *bool {
+	p := new(bool)
+	f.BoolVar(p, name, value, usage)
+	return p
+}
+
+func (f *FlagSet) Var(value Value, name string, usage string) {
+	flag := &Flag{name, usage, value, value.String()}
+	_, alreadyThere := f.formal[name]
+	if alreadyThere {
+		var msg string
+		if f.name == "" {
+			msg = fmt.Sprintf("flag redefined: %s", name)
+		} else {
+			msg = fmt.Sprintf("%s flag redefined: %s", f.name, name)
+		}
+
+		// todo
+	}
 }
 
 func NewFlagSet(name string, errorHandling ErrorHandling) *FlagSet {

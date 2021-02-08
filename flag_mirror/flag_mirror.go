@@ -35,11 +35,6 @@ func numError(err error) error {
 
 type boolValue bool
 
-func newBoolValue(val bool, p *bool) *boolValue {
-	*p = val
-	return (*boolValue)(p)
-}
-
 func (b *boolValue) Get() interface{} {
 	return bool(*b)
 }
@@ -407,6 +402,11 @@ func Args() []string {
 	return CommandLine.args
 }
 
+func newBoolValue(val bool, p *bool) *boolValue {
+	*p = val
+	return (*boolValue)(p)
+}
+
 func (f *FlagSet) BoolVar(p *bool, name string, value bool, usage string) {
 	f.Var(newBoolValue(value, p), name, usage)
 }
@@ -415,6 +415,15 @@ func (f *FlagSet) Bool(name string, value bool, usage string) *bool {
 	p := new(bool)
 	f.BoolVar(p, name, value, usage)
 	return p
+}
+
+func (b *boolValue) Set(s string) error {
+	v, err := strconv.ParseBool(s)
+	if err != nil {
+		err = errParse
+	}
+	*b = boolValue(v)
+	return err
 }
 
 func (f *FlagSet) Var(value Value, name string, usage string) {
@@ -427,9 +436,53 @@ func (f *FlagSet) Var(value Value, name string, usage string) {
 		} else {
 			msg = fmt.Sprintf("%s flag redefined: %s", f.name, name)
 		}
-
-		// todo
+		fmt.Fprintln(f.Output(), msg)
+		panic(msg)
 	}
+	if f.formal == nil {
+		f.formal = make(map[string]*Flag)
+	}
+	f.formal[name] = flag
+}
+
+func Bool(name string, value bool, usage string) *bool {
+	return CommandLine.Bool(name, value, usage)
+}
+
+func (f *FlagSet) IntVar(p *int, name string, value int, usage string) {
+	f.Var(newIntValue(value, p), name, usage)
+}
+
+func IntVar(p *int, name string, value int, usage string) {
+	CommandLine.Var(newIntValue(value, p), name, usage)
+}
+
+func (f *FlagSet) Int(name string, value int, usage string) *int {
+	p := new(int)
+	f.IntVar(p, name, value, usage)
+	return p
+}
+
+func Int(name string, value int, usage string) *int {
+	return CommandLine.Int(name, value, usage)
+}
+
+func (f *FlagSet) Int64Var(p *int64, name string, value int64, usage string) {
+	f.Var(newInt64Value(value, p), name, usage)
+}
+
+func (f *FlagSet) Int64(name string, value int64, usage string) *int64 {
+	p := new(int64)
+	f.Int64Var(p, name, value, usage)
+	return p
+}
+
+func Int64(name string, value int64, usage string) *int64 {
+	return CommandLine.Int64(name, value, usage)
+}
+
+func (f *FlagSet) UintVar(p *uint, name string, value uint, usage string) {
+	f.Var(newUintValue(value, p), name, usage)
 }
 
 func NewFlagSet(name string, errorHandling ErrorHandling) *FlagSet {

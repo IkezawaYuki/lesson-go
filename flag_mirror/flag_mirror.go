@@ -100,9 +100,9 @@ func (i *int64Value) String() string {
 	return strconv.FormatInt(int64(*i), 10)
 }
 
-type uint64Value uint
+type uint64Value uint64
 
-func newUint64Value(val uint, p *uint) *uint64Value {
+func newUint64Value(val uint64, p *uint64) *uint64Value {
 	*p = val
 	return (*uint64Value)(p)
 }
@@ -492,4 +492,18 @@ func NewFlagSet(name string, errorHandling ErrorHandling) *FlagSet {
 	}
 	f.Usage = f.defaultUsage
 	return f
+}
+
+func Int64Var(p *int64, name string, value int64, usage string) {
+	CommandLine.Var(newInt64Value(value, p), name, usage)
+}
+
+func (f *FlagSet) Uint(name string, value uint, usage string) *uint {
+	p := new(uint)
+	f.UintVar(p, name, value, usage)
+	return p
+}
+
+func (f *FlagSet) Uint64Var(p *uint64, name string, value uint64, usage string) {
+	f.Var(newUint64Value(value, p), name, usage)
 }

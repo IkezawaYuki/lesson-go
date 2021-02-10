@@ -368,6 +368,97 @@ func (f *FlagSet) defaultUsage() {
 	f.PrintDefaults()
 }
 
+func (f *FlagSet) usage() {
+	if f.Usage == nil {
+		f.defaultUsage()
+	} else {
+		f.Usage()
+	}
+}
+
+func (f *FlagSet) parseOne() (bool, error) {
+	if len(f.args) == 0 {
+		return false, nil
+	}
+	s := f.args[0]
+	if len(s) < 2 || s[0] != '-' {
+		return false, nil
+	}
+	numMinuses := 1
+	if s[1] == '-' {
+		numMinuses++
+		if len(s) == 2 {
+			f.args = f.args[1:]
+			return false, nil
+		}
+	}
+	name := s[numMinuses:]
+	if len(name) == 0 || name[0] == '-' || name[0] == '=' {
+		return false, f.failf("bad flag syntax: %s", s)
+	}
+
+	f.args = f.args[1:]
+	hasValue := false
+	value := ""
+	for i := 1; i < len(name); i++ {
+		if name[i] == '=' {
+			value = name[i+1:]
+			hasValue = true
+			name = name[0:i]
+			break
+		}
+	}
+	m := f.formal
+	flag, alreadythere := m[name]
+	if !alreadythere {
+		if name == "help" || name == "h" {
+			f.usage()
+			return false, ErrHelp
+		}
+		return false, f.failf("flag provided but not defined: -%s", name)
+	}
+
+	if fv, ok := flag.Value.(boolFlag); ok && fv.IsBoolFlag() {
+		if hasValue {
+			if err := fv.Set(value); err != nil {
+				return false, f.failf("invalid boolean value %q for -%s", value, name, err)
+			}
+		} else {
+			if err := fv.Set("true"); err != nil {
+				return false, f.failf("invalid boolean flag %s: %v", name, err)
+			}
+		}
+	} else {
+		if !hasValue && len(f.args) > 0 {
+			hasValue = true
+			value, f.args = f.args[0], f.args[1:]
+		}
+		if !hasValue {
+			return false, f.failf("flag needs an argument: -%s", name)
+		}
+		if err := flag.Value.Set(value); err != nil {
+			return false, f.failf("invalid value %q for flag -%s: %v", value, name, err)
+		}
+
+		if f.actual == nil {
+			f.actual = make(map[string]*Flag)
+		}
+	}
+	f.actual[name] = flag
+	return true, nil
+}
+
+func (f *FlagSet) Parse(arguments []string) error {
+
+}
+
+func (f *FlagSet) failf(format string, a ...interface{}) error {
+	err := fmt.Errorf(format, a...)
+	fmt.Fprintln(f.Output(), err)
+	f.usage()
+	return err
+}
+
 func VisitAll(fn func(*Flag)) {
 	CommandLine.VisitAll(fn)
 }

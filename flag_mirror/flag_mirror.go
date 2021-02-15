@@ -171,6 +171,20 @@ func newDurationValue(val time.Duration, p *time.Duration) *durationValue {
 	return (*durationValue)(p)
 }
 
+func (f *FlagSet) DurationVar(p *time.Duration, name string, value time.Duration, usage string) {
+	f.Var(newDurationValue(value, p), name, usage)
+}
+
+func DurationVar(p *time.Duration, name string, value time.Duration, usage string) {
+	CommandLine.Var(newDurationValue(value, p), name, usage)
+}
+
+func (f *FlagSet) Duration(name string, value time.Duration, usage string) *time.Duration {
+	p := new(time.Duration)
+	f.DurationVar(p, name, value, usage)
+	return p
+}
+
 func (d *durationValue) Set(s string) error {
 	v, err := time.ParseDuration(s)
 	if err != nil {
@@ -449,7 +463,34 @@ func (f *FlagSet) parseOne() (bool, error) {
 }
 
 func (f *FlagSet) Parse(arguments []string) error {
+	f.parsed = true
+	f.args = arguments
+	for {
+		seen, err := f.parseOne()
+		if seen {
+			continue
+		}
+		if err == nil {
+			break
+		}
+		switch f.errorHandling {
+		case ContinueOnError:
+			return err
+		case ExitOnError:
+			os.Exit(2)
+		case PanicOnError:
+			panic(err)
+		}
+	}
+	return nil
+}
 
+func (f *FlagSet) Parsed() bool {
+	return f.parsed
+}
+
+func Parse() {
+	CommandLine.Parse(os.Args[1:])
 }
 
 func (f *FlagSet) failf(format string, a ...interface{}) error {
@@ -597,4 +638,9 @@ func (f *FlagSet) Uint(name string, value uint, usage string) *uint {
 
 func (f *FlagSet) Uint64Var(p *uint64, name string, value uint64, usage string) {
 	f.Var(newUint64Value(value, p), name, usage)
+}
+
+func (f *FlagSet) Init(name string, errorHandling ErrorHandling) {
+	f.name = name
+	f.errorHandling = errorHandling
 }

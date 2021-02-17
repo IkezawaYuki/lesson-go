@@ -1,5 +1,7 @@
 package path_mirror
 
+import "strings"
+
 type lazybuf struct {
 	s   string
 	buf []byte
@@ -83,4 +85,54 @@ func Clean(path string) string {
 		return "."
 	}
 	return out.string()
+}
+
+func Split(path string) (dir, file string) {
+	i := strings.LastIndex(path, "/")
+	return path[:i+1], path[i+1:]
+}
+
+func Join(elem ...string) string {
+	for i, e := range elem {
+		if e != "" {
+			return Clean(strings.Join(elem[i:], "/"))
+		}
+	}
+	return ""
+}
+
+func Ext(path string) string {
+	for i := len(path) - 1; i >= 0 && path[i] != '/'; i-- {
+		if path[i] == '.' {
+			return path[i:]
+		}
+	}
+	return ""
+}
+
+func Base(path string) string {
+	if path == "" {
+		return "."
+	}
+	for len(path) > 0 && path[len(path)-1] == '/' {
+		path = path[0 : len(path)-1]
+	}
+
+	if i := strings.LastIndex(path, "/"); i >= 0 {
+		path = path[i+1:]
+	}
+
+	if path == "" {
+		return "/"
+	}
+	return path
+}
+
+func IsAbs(path string) bool {
+	return len(path) > 0 && path[0] == '/'
+}
+
+func Dir(path string) string {
+	dir, _ := Split(path)
+	return Clean(dir)
 }

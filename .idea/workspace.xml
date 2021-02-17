@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74dfe613-517a-4874-add5-2f6ad6e32ad4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/path_mirror/path_mirror.go" beforeDir="false" afterPath="$PROJECT_DIR$/path_mirror/path_mirror.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

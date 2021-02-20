@@ -18,7 +18,25 @@ func scanChunk(pattern string) (star bool, chunk, rest string) {
 		pattern = pattern[1:]
 		star = true
 	}
-	intrange := false
+	inrange := false
 	var i int
 
+Scan:
+	for i = 0; i < len(pattern); i++ {
+		switch pattern[i] {
+		case '\\':
+			if i+1 < len(pattern) {
+				i++
+			}
+		case '[':
+			inrange = true
+		case ']':
+			inrange = false
+		case '*':
+			if !inrange {
+				break Scan
+			}
+		}
+	}
+	return star, pattern[0:i], pattern[i:]
 }

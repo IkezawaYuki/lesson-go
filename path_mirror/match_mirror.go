@@ -1,6 +1,9 @@
 package path_mirror
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 var ErrBadPattern = errors.New("syntax error in pattern")
 
@@ -10,6 +13,18 @@ Pattern:
 		var star bool
 		var chunk string
 		star, chunk, pattern = scanChunk(pattern)
+
+		if star && chunk == "" {
+			return !strings.Contains(name, "/"), nil
+		}
+
+		t, ok, err := matchChunk(chunk, name)
+	}
+}
+
+func matchChunk(chunk, s string) (rest string, ok bool, err error) {
+	for len(chunk) > 0 {
+
 	}
 }
 

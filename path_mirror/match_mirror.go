@@ -3,6 +3,7 @@ package path_mirror
 import (
 	"errors"
 	"strings"
+	"unicode/utf8"
 )
 
 var ErrBadPattern = errors.New("syntax error in pattern")
@@ -24,7 +25,25 @@ Pattern:
 
 func matchChunk(chunk, s string) (rest string, ok bool, err error) {
 	for len(chunk) > 0 {
+		if len(s) == 0 {
+			return
+		}
+		switch chunk[0] {
+		case '[':
+			r, n := utf8.DecodeRuneInString(s)
+			s = s[n:]
+			chunk = chunk[1:]
+		}
 
+		match := false
+		nrange := 0
+		for {
+			if len(chunk) > 0 && chunk[0] == ']' && nrange > 0 {
+				chunk = chunk[1:]
+				break
+			}
+
+		}
 	}
 }
 

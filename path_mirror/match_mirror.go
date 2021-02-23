@@ -42,9 +42,37 @@ func matchChunk(chunk, s string) (rest string, ok bool, err error) {
 				chunk = chunk[1:]
 				break
 			}
+			var lo, hi rune
+			if lo, chunk, err = getEsc(chunk); err != nil {
+				return
+			}
+			hi = lo
 
 		}
 	}
+}
+
+func getEsc(chunk string) (r rune, nchunk string, err error) {
+	if len(chunk) == 0 || chunk[0] == '-' || chunk[0] == ']' {
+		err = ErrBadPattern
+		return
+	}
+	if chunk[0] == '\\' {
+		chunk = chunk[1:]
+		if len(chunk) == 0 {
+			err = ErrBadPattern
+			return
+		}
+	}
+	r, n := utf8.DecodeRuneInString(chunk)
+	if r == utf8.RuneError && n == 1 {
+		err = ErrBadPattern
+	}
+	nchunk = chunk[n:]
+	if len(nchunk) == 0 {
+		err = ErrBadPattern
+	}
+	return
 }
 
 func scanChunk(pattern string) (star bool, chunk, rest string) {

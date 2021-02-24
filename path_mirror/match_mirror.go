@@ -33,23 +33,63 @@ func matchChunk(chunk, s string) (rest string, ok bool, err error) {
 			r, n := utf8.DecodeRuneInString(s)
 			s = s[n:]
 			chunk = chunk[1:]
-		}
 
-		match := false
-		nrange := 0
-		for {
-			if len(chunk) > 0 && chunk[0] == ']' && nrange > 0 {
+			notNegated := true
+			if len(chunk) > 0 && chunk[0] == '^' {
+				notNegated = false
 				chunk = chunk[1:]
-				break
 			}
-			var lo, hi rune
-			if lo, chunk, err = getEsc(chunk); err != nil {
+
+			match := false
+			nrange := 0
+			for {
+				if len(chunk) > 0 && chunk[0] == ']' && nrange > 0 {
+					chunk = chunk[1:]
+					break
+				}
+				var lo, hi rune
+				if lo, chunk, err = getEsc(chunk); err != nil {
+					return
+				}
+				hi = lo
+				if chunk[0] == '-' {
+					if hi, chunk, err = getEsc(chunk[1:]); err != nil {
+						return
+					}
+				}
+				if lo <= r && r <= hi {
+					match = true
+				}
+				nrange++
+			}
+			if match != notNegated {
 				return
 			}
-			hi = lo
 
+		case '?':
+			if s[0] == '/' {
+				return
+			}
+			_, n := utf8.DecodeRuneInString(s)
+			s = s[n:]
+			chunk = chunk[1:]
+
+		case '\\':
+			chunk = chunk[1:]
+			if len(chunk) == 0 {
+				err = ErrBadPattern
+				return
+			}
+			fallthrough
+		default:
+			if chunk[0] != s[0] {
+				return
+			}
+			s = s[1:]
+			chunk = chunk[1:]
 		}
 	}
+	return s, true, nil
 }
 
 func getEsc(chunk string) (r rune, nchunk string, err error) {

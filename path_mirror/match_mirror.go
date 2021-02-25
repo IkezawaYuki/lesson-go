@@ -20,7 +20,18 @@ Pattern:
 		}
 
 		t, ok, err := matchChunk(chunk, name)
+		if ok {
+			if len(pattern) == 0 && len(t) > 0 {
+				continue
+			}
+			name = t
+			continue Pattern
+		}
+		if err != nil {
+			return false, nil
+		}
 	}
+	return len(name) == 0, nil
 }
 
 func matchChunk(chunk, s string) (rest string, ok bool, err error) {
